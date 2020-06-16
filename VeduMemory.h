@@ -23,6 +23,14 @@ namespace VeduMemory
 	namespace KernelMode
 	{
 		template <class dataType>
+		dataType Read(DWORD addressToRead)
+		{
+			dataType rpmBuffer;
+			NtReadVirtualMemory(Externals::processHandle, (PVOID)addressToRead, &rpmBuffer, sizeof(dataType), 0);
+			return rpmBuffer;
+		}
+		
+		template <class dataType>
 		void Write(DWORD addressToWrite, dataType ValueToWrite)
 		{
 			DWORD oldProtect = 0;
@@ -46,14 +54,6 @@ namespace VeduMemory
 				std::cout << Status << std::endl;
 
 			VirtualProtectEx(Externals::processHandle, (PVOID)addressToWrite, sizeof(dataType), oldProtect, NULL);
-		}
-
-		template <class dataType>
-		dataType Read(DWORD addressToRead)
-		{
-			dataType rpmBuffer;
-			NtReadVirtualMemory(Externals::processHandle, (PVOID)addressToRead, &rpmBuffer, sizeof(dataType), 0);
-			return rpmBuffer;
 		}
 	}
 
